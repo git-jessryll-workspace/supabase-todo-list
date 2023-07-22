@@ -7,7 +7,7 @@ export default function TodoItem({ todo, setTodoList }) {
   const [isDeleted, setIsDeleted] = useState(false);
   useEffect(() => {
     if (isDeleted) {
-      setTodoList((todoList) =>
+      setTimeout(() => setTodoList((todoList) =>
         todoList.map((todoItem) => {
           if (todo.ref_id === todoItem.ref_id) {
             return {
@@ -17,7 +17,7 @@ export default function TodoItem({ todo, setTodoList }) {
           }
           return todoItem;
         })
-      );
+      ), 500)
     }
   }, [isDeleted]);
   return (
