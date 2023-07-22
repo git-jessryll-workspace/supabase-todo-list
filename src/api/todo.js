@@ -20,7 +20,10 @@ export default {
   deleteTodo: async (refId) => {
     return await supabase.from(TABLE).delete().eq(PRIMARY, refId);
   },
-  deleteCompleted: async () => {
-    return await supabase.from(TABLE).delete().eq("is_done", true);
+  deleteCompleted: async (userId) => {
+    return await supabase.from(TABLE).delete().eq("is_done", true).eq('user_id', userId);
   },
+  deleteTodoByUserId: async (userId) => {
+    return await supabase.from(TABLE).delete().eq('user_id', userId)
+  }
 };

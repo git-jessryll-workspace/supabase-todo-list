@@ -4,6 +4,7 @@ import TodoForm from "../forms/TodoForm";
 import TodoList from "../components/todo/TodoList";
 import TodoFooter from "../components/todo/TodoFooter";
 import api from "../api";
+import TodoSetting from "../components/todo/TodoSetting";
 
 export default function TodoPage() {
   const [filterBy, setFilterBy] = useState("ALL");
@@ -17,7 +18,7 @@ export default function TodoPage() {
 
     api.Todo.getTodos().then((res) => setTodoList(res.data));
 
-    supabase
+    let channel = supabase
       .channel("table-todos-changes")
       .on(
         "postgres_changes",
@@ -33,7 +34,7 @@ export default function TodoPage() {
                 if (todo.ref_id === payload.new.ref_id) {
                   return {
                     ...todo,
-                    is_done: payload.new.is_done
+                    is_done: payload.new.is_done,
                   };
                 }
                 return todo;
@@ -43,6 +44,9 @@ export default function TodoPage() {
         }
       )
       .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const filterTodoList = () => {
@@ -62,7 +66,10 @@ export default function TodoPage() {
   };
 
   return (
-    <div className="md:border md:border-gray-300 p-4 mt-4 md:rounded-xl shadow-md w-full md:w-[65%]">
+    <div className="md:border md:border-gray-300 p-4 md:rounded-xl shadow-md w-full md:w-[50%]">
+      <div className="flex justify-end items-center">
+        <TodoSetting setTodoList={setTodoList} />
+      </div>
       <div className="flex justify-center py-5">
         <h1 className="text-3xl font-bold antialiased text-gray-500">
           Todo List

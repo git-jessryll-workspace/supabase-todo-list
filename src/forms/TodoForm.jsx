@@ -1,28 +1,33 @@
 import { useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import api from "../api";
+import { decodeJwt } from "../utils";
 
 export default function ({ setTodoList }) {
   const todoInputRef = useRef();
-
+  const { sub } = decodeJwt();
   const handleAddTodo = async (event) => {
     event.preventDefault();
     const refId = uuidv4();
     const title = todoInputRef.current.value;
+
     setTodoList((todoList) => {
       return [
         {
           ref_id: refId,
           title,
+          user_id: sub,
         },
         ...todoList,
       ];
     });
+
     todoInputRef.current.value = "";
 
     await api.Todo.createTodo({
       ref_id: refId,
       title,
+      user_id: sub,
     });
   };
   return (

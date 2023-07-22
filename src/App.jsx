@@ -4,6 +4,7 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "./supabaseClient";
 import TodoPage from "./pages/TodoPage";
 import api from "./api";
+import Header from "./components/Header";
 
 function App() {
   const [session, setSession] = React.useState(null);
@@ -18,6 +19,10 @@ function App() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+
+    if (session) {
+      window.localStorage.setItem('access_token', session.access_token);
+    }
 
     return () => subscription.unsubscribe();
   }, []);
@@ -40,10 +45,12 @@ function App() {
       </div>
     );
   }
-
   return (
-    <div className="flex justify-center">
-      <TodoPage />
+    <div className="">
+      <Header />
+      <main className="flex justify-center">
+        <TodoPage />
+      </main>
     </div>
   );
 }
