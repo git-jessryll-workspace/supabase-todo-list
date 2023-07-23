@@ -3,7 +3,6 @@ import { supabase } from "../supabaseClient";
 import TodoForm from "../forms/TodoForm";
 import TodoList from "../components/todo/TodoList";
 import TodoFooter from "../components/todo/TodoFooter";
-import api from "../api";
 import TodoSetting from "../components/todo/TodoSetting";
 
 export default function TodoPage() {
@@ -16,9 +15,17 @@ export default function TodoPage() {
 
     dataFetchRef.current = true;
 
-    api.Todo.getTodos().then((res) => setTodoList(res.data));
+    const todoApi = async () =>
+      await import("../api/todo").then((module) => {
+        return module.default;
+      });
 
-    let channel = supabase
+    todoApi().then(async ({ getTodos }) => {
+      const { data } = await getTodos();
+      setTodoList(data);
+    });
+
+    supabase
       .channel("table-todos-changes")
       .on(
         "postgres_changes",
@@ -44,9 +51,6 @@ export default function TodoPage() {
         }
       )
       .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, []);
 
   const filterTodoList = () => {
@@ -66,13 +70,13 @@ export default function TodoPage() {
   };
 
   return (
-    <div className="md:border md:border-gray-300 p-4 md:rounded-xl shadow-md w-full md:w-[50%]">
+    <div className="md:border md:border-gray-300 p-4 md:rounded-xl md:shadow-md w-full md:w-[60%] lg:w-[50%] xl:w-[40%]">
       <div className="flex justify-end items-center">
         <TodoSetting setTodoList={setTodoList} />
       </div>
       <div className="flex justify-center py-5">
         <h1 className="text-3xl font-bold antialiased text-gray-500">
-          Todo List
+          To Do List
         </h1>
       </div>
       <div>

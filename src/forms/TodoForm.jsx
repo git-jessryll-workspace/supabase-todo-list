@@ -1,35 +1,42 @@
 import { useRef } from "react";
-import { v4 as uuidv4 } from "uuid";
-import api from "../api";
-import { decodeJwt } from "../utils";
+import { useAuth } from "../context/AuthProvider";
 
 export default function ({ setTodoList }) {
+  const { user } = useAuth();
   const todoInputRef = useRef();
-  const { sub } = decodeJwt();
+
   const handleAddTodo = async (event) => {
     event.preventDefault();
-    const refId = uuidv4();
+
     const title = todoInputRef.current.value;
 
+    if (title === "") return;
+
+    let refId;
+    await import("uuid")
+      .then((module) => {
+        return module.v4();
+      })
+      .then((uuid) => (refId = uuid));
+
+    const data = {
+      ref_id: refId,
+      title,
+      user_id: user.id,
+    };
+
     setTodoList((todoList) => {
-      return [
-        {
-          ref_id: refId,
-          title,
-          user_id: sub,
-        },
-        ...todoList,
-      ];
+      return [data, ...todoList];
     });
 
     todoInputRef.current.value = "";
 
-    await api.Todo.createTodo({
-      ref_id: refId,
-      title,
-      user_id: sub,
+    const { createTodo } = await import("./../api/todo").then((module) => {
+      return module.default;
     });
+    await createTodo(data);
   };
+
   return (
     <>
       <form onSubmit={handleAddTodo} className="text-gray-500 pb-4">

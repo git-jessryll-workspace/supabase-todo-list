@@ -1,10 +1,10 @@
-import jwt_decode from "jwt-decode";
-
 export const decodeJwt = () => {
   const accessToken = window.localStorage.getItem("access_token");
   if (!accessToken) return null;
-
-  const decodedToken = jwt_decode(accessToken);
+  let decodedToken;
+  import("jwt-decode").then((module) => {
+    decodedToken = module.jwt_decode(accessToken);
+  });
 
   return decodedToken;
 };

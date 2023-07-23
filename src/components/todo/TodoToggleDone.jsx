@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import api from "../../api";
 
 export default function TodoToggleDone({ todo }) {
   const [isDone, setIsDone] = useState();
@@ -10,7 +9,10 @@ export default function TodoToggleDone({ todo }) {
 
   const handleToggleDone = async () => {
     setIsDone(true);
-    await api.Todo.updateTodo(todo.ref_id, { is_done: !todo.is_done });
+    const {updateTodo} = await import('../../api/todo').then(module => {
+      return module.default;
+    })
+    await updateTodo(todo.ref_id, { is_done: !todo.is_done });
   };
 
   return (

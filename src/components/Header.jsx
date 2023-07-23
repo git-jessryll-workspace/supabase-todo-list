@@ -1,28 +1,34 @@
-import { useState } from 'react'
-import { Dialog } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import api from '../api'
+import { useState } from "react";
+import { Dialog } from "@headlessui/react";
+import Logo from "./../assets/logo-todo.png";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
-const navigation = [
-  { name: 'Product', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
-]
+const navigation = [];
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { auth, signOut } = useAuth();
   const handleSignOut = async () => {
-    await api.Auth.logout();
-  }
+    try {
+      const { error } = await signOut();
+      console.log(error);
+    } catch (error) {
+      console.log(error);
+    }
+    navigate("/login");
+  };
   return (
     <header className="bg-white">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
-        <a href="#" className="-m-1.5 p-1.5">
-          <span className="sr-only">Your Company</span>
-          <img className="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="" />
+      <nav
+        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        aria-label="Global"
+      >
+        <a href="#" className="-m-1.5 p-1.5 flex space-x-2 items-center">
+          {/* <span className="sr-only">Your Company</span> */}
+          <img className="h-8 w-auto" src={Logo} alt="" />
+          <h5 className="font-semibold text-lg">Todo List</h5>
         </a>
         <div className="flex lg:hidden">
           <button
@@ -31,31 +37,53 @@ export default function Header() {
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
+            </svg>
           </button>
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
-            <a key={item.name} href={item.href} className="text-sm font-semibold leading-6 text-gray-900">
+            <a
+              key={item.name}
+              href={item.href}
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
               {item.name}
             </a>
           ))}
-          <button onClick={handleSignOut} className="text-sm font-semibold leading-6 text-gray-900">
-            Log out  <span aria-hidden="true">&rarr;</span>
+          <button
+            onClick={handleSignOut}
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
+            Log out <span aria-hidden="true">&rarr;</span>
           </button>
         </div>
       </nav>
-      <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+      <Dialog
+        as="div"
+        className="lg:hidden"
+        open={mobileMenuOpen}
+        onClose={setMobileMenuOpen}
+      >
         <div className="fixed inset-0 z-10" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
+            <a href="#" className="-m-1.5 p-1.5 flex space-x-2 items-center">
               <span className="sr-only">Your Company</span>
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                alt=""
-              />
+              <img className="h-8 w-auto" src={Logo} alt="" />
+              <h5 className="font-semibold text-lg">Todo List</h5>
             </a>
             <button
               type="button"
@@ -63,7 +91,20 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               <span className="sr-only">Close menu</span>
-              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
             </button>
           </div>
           <div className="mt-6 flow-root">
@@ -81,7 +122,7 @@ export default function Header() {
               </div>
               <div className="py-6">
                 <button
-                    onClick={handleSignOut}
+                  onClick={handleSignOut}
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                 >
                   Log out
@@ -92,5 +133,5 @@ export default function Header() {
         </Dialog.Panel>
       </Dialog>
     </header>
-  )
+  );
 }
