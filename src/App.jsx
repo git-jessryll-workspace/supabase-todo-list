@@ -1,5 +1,4 @@
-import { Suspense, lazy, useEffect, useRef, useState } from "react";
-import { supabase } from "./supabaseClient";
+import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import AuthRoute from "./components/AuthRoute";
 
@@ -11,7 +10,14 @@ const HeaderComponent = lazy(() => import("./components/Header"));
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<AuthPage />} />
+      <Route
+        path="/login"
+        element={
+          <Suspense>
+            <AuthPage />
+          </Suspense>
+        }
+      />
       <Route element={<AuthRoute />}>
         <Route
           path="/"
