@@ -2,9 +2,13 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { classNames } from "../../utils";
 import { useAuth } from "../../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function TodoSetting({ setTodoList }) {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+
+  const navigate = useNavigate();
+
   const handleClearCompleted = async () => {
     setTodoList((todoList) => todoList.filter((todo) => !todo.is_done));
     const { deleteCompleted } = await import("../../api/todo").then(
@@ -22,6 +26,15 @@ export default function TodoSetting({ setTodoList }) {
       }
     );
     await deleteTodoByUserId(user.id);
+  };
+  const handleSignOut = async () => {
+    try {
+      const { error } = await signOut();
+      console.log(error);
+    } catch (error) {
+      console.log(error);
+    }
+    navigate("/login");
   };
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -80,6 +93,20 @@ export default function TodoSetting({ setTodoList }) {
                   onClick={handleDeleteAll}
                 >
                   Delete All Todos
+                </a>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <a
+                  href="#"
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm"
+                  )}
+                  onClick={handleSignOut}
+                >
+                 Sign out
                 </a>
               )}
             </Menu.Item>

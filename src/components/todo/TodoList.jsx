@@ -6,7 +6,7 @@ export default function TodoList({ todoList, setTodoList }) {
     <div className="space-y-1">
       {todoList.length ===
         todoList.filter((todo) => todo.is_deleted).length && (
-        <div className="flex justify-center items-center py-4">
+        <div className="flex justify-center items-center py-20">
           <div>
             <div className="flex justify-center">
               <img src={TodoImage} className="h-10 w-10" />

@@ -5,8 +5,6 @@ import AuthRoute from "./components/AuthRoute";
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const TodoPage = lazy(() => import("./pages/TodoPage"));
 
-const HeaderComponent = lazy(() => import("./components/Header"));
-
 function App() {
   return (
     <Routes>
@@ -22,16 +20,13 @@ function App() {
         <Route
           path="/"
           element={
-            <>
-              <Suspense fallback={<div>Loading...</div>}>
-                <HeaderComponent />
-              </Suspense>
+            <div className="mt-10">
               <main className="flex justify-center">
                 <Suspense fallback={<div>loading...</div>}>
                   <TodoPage />
                 </Suspense>
               </main>
-            </>
+            </div>
           }
         />
       </Route>

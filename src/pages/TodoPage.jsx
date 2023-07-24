@@ -4,6 +4,7 @@ import TodoForm from "../forms/TodoForm";
 import TodoList from "../components/todo/TodoList";
 import TodoFooter from "../components/todo/TodoFooter";
 import TodoSetting from "../components/todo/TodoSetting";
+import Logo from "./../assets/logo-todo.png";
 
 export default function TodoPage() {
   const [filterBy, setFilterBy] = useState("ALL");
@@ -70,14 +71,15 @@ export default function TodoPage() {
   };
 
   return (
-    <div className="md:border md:border-gray-300 p-4 md:rounded-xl md:shadow-md w-full md:w-[60%] lg:w-[50%] xl:w-[40%]">
-      <div className="flex justify-end items-center">
+    <div className="md:border md:border-gray-300 p-4 relative md:rounded-xl md:shadow-md w-full md:w-[60%] lg:w-[50%] xl:w-[40%]">
+      <div className="flex justify-between items-center px-2 py-4">
+        <div>
+          <a href="#" className="-m-1.5 p-1.5 flex space-x-2 items-center">
+            <img className="h-8 w-auto" src={Logo} alt="" />
+            <h5 className="font-semibold text-lg">Todo List</h5>
+          </a>
+        </div>
         <TodoSetting setTodoList={setTodoList} />
-      </div>
-      <div className="flex justify-center py-5">
-        <h1 className="text-3xl font-bold antialiased text-gray-500">
-          To Do List
-        </h1>
       </div>
       <div>
         <TodoForm setTodoList={setTodoList} />

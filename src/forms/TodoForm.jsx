@@ -43,7 +43,7 @@ export default function ({ setTodoList }) {
         <div>
           <input
             ref={todoInputRef}
-            className="w-full border border-gray-300 text-xl p-4 rounded-lg text-gray-700 font-bold"
+            className="w-full border border-gray-300 text-lg p-2.5 rounded-lg text-gray-700 font-bold"
             name="title"
             placeholder="What needs to be done?"
           />
