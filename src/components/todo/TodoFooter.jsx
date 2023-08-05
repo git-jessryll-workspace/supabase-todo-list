@@ -34,9 +34,6 @@ export default function TodoFooter({
           text={"COMPLETED"}
         />
       </div>
-      <div>
-        <ClearTodoCompleted setTodoList={setTodoList} />
-      </div>
     </div>
   );
 }
