@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
+import { useTodo } from "../../context/TodoProvider";
 
 export default function TodoToggleDone({ todo }) {
   const [isDone, setIsDone] = useState();
 
+  const { toggleStatus } = useTodo();
+
   useEffect(() => {
     setIsDone(todo.is_done);
-  }, [todo]);
+  }, [todo.is_done]);
+
 
   const handleToggleDone = async () => {
-    setIsDone(true);
-    const {updateTodo} = await import('../../api/todo').then(module => {
-      return module.default;
-    })
-    await updateTodo(todo.ref_id, { is_done: !todo.is_done });
+    setIsDone(!isDone);
+    await toggleStatus({ todoRefId: todo.ref_id, is_done: !isDone });
   };
 
   return (

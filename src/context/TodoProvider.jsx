@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import useSupabase from "../hooks/useSupabase";
 import useFilterTodos from "../hooks/useFilterTodos";
 
 const TodoContext = createContext();
@@ -11,8 +10,9 @@ const TodoProvider = ({ children }) => {
 
   const [todos, setTodos] = useState([]);
 
-  const { supabaseTodoChange } = useSupabase();
-  const { filterTodoList, setFilter, filter } = useFilterTodos({ todoList: todos });
+  const { filterTodoList, setFilter, filter } = useFilterTodos({
+    todoList: todos,
+  });
 
   useEffect(() => {
     if (dataFetchRef.current) return;
@@ -21,22 +21,6 @@ const TodoProvider = ({ children }) => {
     todoApi().then(async ({ getTodos }) => {
       const { data } = await getTodos();
       setTodos((todos) => [...todos, ...data]);
-    });
-
-    supabaseTodoChange((payload) => {
-      if (payload.eventType === "UPDATE") {
-        setTodos((todos) =>
-          todos.map((todo) => {
-            if (todo.ref_id === payload.new.ref_id) {
-              return {
-                ...todo,
-                is_done: payload.new.is_done,
-              };
-            }
-            return todo;
-          })
-        );
-      }
     });
   }, []);
 
@@ -93,10 +77,16 @@ const TodoProvider = ({ children }) => {
     await deleteCompleted(userId);
   };
 
+  const toggleStatus = async ({ todoRefId, is_done }) => {
+    const { updateTodo } = await todoApi();
+    await updateTodo(todoRefId, { is_done });
+  };
+
   return (
     <TodoContext.Provider
       value={{
         todos: filterTodoList,
+        filterBy: filter,
         setTodos,
         addTodo,
         deleteTodo,
@@ -104,7 +94,7 @@ const TodoProvider = ({ children }) => {
         deleteAllTodos,
         deleteAllCompleted,
         setFilterBy: setFilter,
-        filterBy: filter
+        toggleStatus,
       }}
     >
       {children}

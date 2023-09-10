@@ -1,9 +1,7 @@
 import { memo } from "react";
 import TodoImage from "../../assets/to-do-list.png";
-import { useTodo } from "../../context/TodoProvider";
 
-function TodoEmptyMessageComponent({todos}) {
-  
+function TodoEmptyMessageComponent({ todos }) {
   return (
     <>
       {todos.length === todos.filter((todo) => todo.is_deleted).length && (
