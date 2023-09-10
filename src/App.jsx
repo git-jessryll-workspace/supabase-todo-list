@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import AuthRoute from "./components/AuthRoute";
+import { AuthRoute } from "./components";
+import TodoProvider from "./context/TodoProvider";
 
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const TodoPage = lazy(() => import("./pages/TodoPage"));
@@ -23,7 +24,9 @@ function App() {
             <div className="mt-10">
               <main className="flex justify-center">
                 <Suspense fallback={<div>loading...</div>}>
-                  <TodoPage />
+                  <TodoProvider>
+                    <TodoPage />
+                  </TodoProvider>
                 </Suspense>
               </main>
             </div>

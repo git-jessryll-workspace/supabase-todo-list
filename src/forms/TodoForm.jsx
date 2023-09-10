@@ -1,9 +1,12 @@
 import { useRef } from "react";
 import { useAuth } from "../context/AuthProvider";
+import { useTodo } from "../context/TodoProvider";
 
-export default function ({ setTodoList }) {
+export default function () {
   const { user } = useAuth();
   const todoInputRef = useRef();
+
+  const { addTodo } = useTodo();
 
   const handleAddTodo = async (event) => {
     event.preventDefault();
@@ -12,29 +15,8 @@ export default function ({ setTodoList }) {
 
     if (title === "") return;
 
-    let refId;
-    await import("uuid")
-      .then((module) => {
-        return module.v4();
-      })
-      .then((uuid) => (refId = uuid));
-
-    const data = {
-      ref_id: refId,
-      title,
-      user_id: user.id,
-    };
-
-    setTodoList((todoList) => {
-      return [data, ...todoList];
-    });
-
     todoInputRef.current.value = "";
-
-    const { createTodo } = await import("./../api/todo").then((module) => {
-      return module.default;
-    });
-    await createTodo(data);
+    await addTodo({ todoText: title, user_id: user.id });
   };
 
   return (

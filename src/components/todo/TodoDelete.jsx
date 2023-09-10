@@ -1,11 +1,10 @@
+import { useTodo } from "../../context/TodoProvider";
 
 export default function TodoDelete({ todo, setIsDeleted }) {
+  const { deleteTodo } = useTodo();
   const handleDeleteTodo = async () => {
     setIsDeleted(true);
-    const {deleteTodo} = await import("../../api/todo").then(module => {
-      return module.default;
-    })
-    await deleteTodo(todo.ref_id);
+    await deleteTodo({ todoRefId: todo.ref_id });
   };
   return (
     <div>

@@ -3,29 +3,20 @@ import { Menu, Transition } from "@headlessui/react";
 import { classNames } from "../../utils";
 import { useAuth } from "../../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { useTodo } from "../../context/TodoProvider";
 
-export default function TodoSetting({ setTodoList }) {
+export default function TodoSetting() {
   const { user, signOut } = useAuth();
 
   const navigate = useNavigate();
 
+  const { deleteAllTodos, deleteAllCompleted } = useTodo();
+
   const handleClearCompleted = async () => {
-    setTodoList((todoList) => todoList.filter((todo) => !todo.is_done));
-    const { deleteCompleted } = await import("../../api/todo").then(
-      (module) => {
-        return module.default;
-      }
-    );
-    await deleteCompleted(user.id);
+    await deleteAllCompleted({ userId: user.id });
   };
   const handleDeleteAll = async () => {
-    setTodoList([]);
-    const { deleteTodoByUserId } = await import("../../api/todo").then(
-      (module) => {
-        return module.default;
-      }
-    );
-    await deleteTodoByUserId(user.id);
+    await deleteAllTodos({ userId: user.id });
   };
   const handleSignOut = async () => {
     try {
@@ -36,6 +27,7 @@ export default function TodoSetting({ setTodoList }) {
     }
     navigate("/login");
   };
+  
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -106,7 +98,7 @@ export default function TodoSetting({ setTodoList }) {
                   )}
                   onClick={handleSignOut}
                 >
-                 Sign out
+                  Sign out
                 </a>
               )}
             </Menu.Item>

@@ -34,11 +34,11 @@ const AuthProvider = ({ children }) => {
       if (event === "SIGNED_IN") {
         setUser(session.user);
         setAuth(true);
-        navigate('/')
+        navigate("/");
       } else if (event === "SIGNED_OUT") {
         setUser(null);
         setAuth(false);
-        navigate('/login')
+        navigate("/login");
       }
     });
 

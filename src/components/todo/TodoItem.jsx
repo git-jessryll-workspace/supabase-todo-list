@@ -1,23 +1,15 @@
-import { useEffect, useState } from "react";
+import { memo, useLayoutEffect, useState } from "react";
 import TodoDelete from "./TodoDelete";
 import TodoToggleDone from "./TodoToggleDone";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTodo } from "../../context/TodoProvider";
 
-export default function TodoItem({ todo, setTodoList }) {
+function TodoItemComponent({ todo }) {
   const [isDeleted, setIsDeleted] = useState(false);
-  useEffect(() => {
+  const { updatedDeleteTodoList } = useTodo();
+  useLayoutEffect(() => {
     if (isDeleted) {
-      setTimeout(() => setTodoList((todoList) =>
-        todoList.map((todoItem) => {
-          if (todo.ref_id === todoItem.ref_id) {
-            return {
-              ...todoItem,
-              is_deleted: true,
-            };
-          }
-          return todoItem;
-        })
-      ), 500)
+      setTimeout(() => updatedDeleteTodoList({ todoRefId: todo.ref_id }), 500);
     }
   }, [isDeleted]);
   return (
@@ -29,7 +21,7 @@ export default function TodoItem({ todo, setTodoList }) {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -100, opacity: 0 }}
           key={todo.id}
-          className={`border border-gray-300 rounded-lg p-3 flex justify-between items-center hover:bg-gray-200`}
+          className={`border border-gray-300 rounded-lg p-3 flex justify-between items-center hover:bg-gray-200 my-1`}
         >
           <TodoToggleDone todo={todo} />
           <TodoDelete todo={todo} setIsDeleted={setIsDeleted} />
@@ -38,3 +30,7 @@ export default function TodoItem({ todo, setTodoList }) {
     </AnimatePresence>
   );
 }
+
+const TodoItem = memo(TodoItemComponent);
+
+export default TodoItem;

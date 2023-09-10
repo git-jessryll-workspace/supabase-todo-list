@@ -12,3 +12,14 @@ export const decodeJwt = () => {
 export function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
+
+export const generateUuid = async () => {
+  let uuIdv4;
+  await import("uuid")
+    .then((module) => {
+      return module.v4();
+    })
+    .then((uuid) => (uuIdv4 = uuid));
+  return uuIdv4;
+};
+

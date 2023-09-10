@@ -8,7 +8,7 @@ export default {
   getTodos: async () => {
     return await supabase
       .from(TABLE)
-      .select()
+      .select('id, ref_id, title, is_done')
       .order("id", { ascending: false });
   },
   createTodo: async (formData) => {

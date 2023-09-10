@@ -1,12 +1,8 @@
-import ClearTodoCompleted from "./ClearCompletedTodo";
+import { useTodo } from "../../context/TodoProvider";
 import FilterTodo from "./FilterTodo";
 
-export default function TodoFooter({
-  todoList,
-  setTodoList,
-  filterBy,
-  setFilterBy,
-}) {
+export default function TodoFooter({ todoList }) {
+  const { setFilterBy, filterBy } = useTodo();
   return (
     <div className="flex text-sm justify-between items-center h-[50px] px-2">
       <div>
